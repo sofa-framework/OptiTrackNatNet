@@ -1,26 +1,26 @@
 cmake_minimum_required(VERSION 3.12)
 project(OptiTrackNatNet)
 
+set(OPTITRACKNATNET_SRC "src/${PROJECT_NAME}")
 
 set(HEADER_FILES
-    OptiTrackNatNetClient.h
-    OptiTrackNatNetDevice.h
-    config.h
+    ${OPTITRACKNATNET_SRC}/OptiTrackNatNetClient.h
+    ${OPTITRACKNATNET_SRC}/OptiTrackNatNetDevice.h
+    ${OPTITRACKNATNET_SRC}/config.h.in
 )
 
 set(SOURCE_FILES
-    OptiTrackNatNetClient.cpp
-    OptiTrackNatNetDevice.cpp
-    initOptiTrackNatNet.cpp
+    ${OPTITRACKNATNET_SRC}/OptiTrackNatNetClient.cpp
+    ${OPTITRACKNATNET_SRC}/OptiTrackNatNetDevice.cpp
+    ${OPTITRACKNATNET_SRC}/initOptiTrackNatNet.cpp
 )
 
-sofa_find_package(SofaSimulationCommon REQUIRED)
+find_package(SofaSimulationCommon REQUIRED)
 sofa_find_package(SofaUserInteraction REQUIRED)
 sofa_find_package(Sofa.GL REQUIRED)
 sofa_find_package(Boost QUIET COMPONENTS system regex date_time REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DSOFA_BUILD_OPTITRACKNATNET")
 
 if(MSVC)
     #define BOOST_ALL_DYN_LINK needed for dynamic linking with boost libraries
@@ -29,19 +29,17 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} SofaCore SofaSimulationCommon SofaUserInteraction Sofa.GL)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 # Seems to be required by boost::asio
 if(UNIX)
     target_link_libraries(${PROJECT_NAME} pthread)
 endif()
 
-install(TARGETS ${PROJECT_NAME}
-        COMPONENT OptiTrackNatNet_libraries
-        EXPORT OptiTrackNatNetTargets
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        PUBLIC_HEADER DESTINATION "include/${PROJECT_NAME}")
-
-install(DIRECTORY examples/ DESTINATION share/sofa/plugins/${PROJECT_NAME})
+sofa_create_package_with_targets(
+    PACKAGE_NAME ${PROJECT_NAME}
+    PACKAGE_VERSION ${Sofa_VERSION}
+    TARGETS ${PROJECT_NAME} AUTO_SET_TARGET_PROPERTIES
+    INCLUDE_SOURCE_DIR "src"
+    INCLUDE_INSTALL_DIR "${PROJECT_NAME}"
+    RELOCATABLE "plugins"
+)
