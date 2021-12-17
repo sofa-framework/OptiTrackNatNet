@@ -14,7 +14,7 @@ set(SOURCE_FILES
     initOptiTrackNatNet.cpp
 )
 
-sofa_find_package(SofaSimulationCommon REQUIRED)
+find_package(SofaSimulationCommon REQUIRED)
 sofa_find_package(SofaUserInteraction REQUIRED)
 sofa_find_package(Sofa.GL REQUIRED)
 sofa_find_package(Boost QUIET COMPONENTS system regex date_time REQUIRED)
