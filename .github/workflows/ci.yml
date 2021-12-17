@@ -27,7 +27,29 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
-          path: ${{ env.WORKSPACE_SRC_PATH }}        
+          path: ${{ env.WORKSPACE_SRC_PATH }}
+
+      - name: Install deps
+        shell: bash
+        run: | # on mac, boost regex is already installed with brew
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get update
+            sudo apt-get -qq install libboost-regex-dev
+          elif [[ "$RUNNER_OS" == "Windows" ]]; then
+            if ! ls -a "$BOOST_INSTALL_DIR"/* >/dev/null 2>&1; then
+              # directory does not exist or is empty
+              major="$(echo $BOOST_VERSION | cut -d. -f1)"
+              minor="$(echo $BOOST_VERSION | cut -d. -f2)"
+              patch="$(echo $BOOST_VERSION | cut -d. -f3)"
+              if [ "$SOFA_VERSION_FOR_DEPS" -lt 2112 ]; then
+                curl --output "${{ runner.temp }}/boost_tmp.exe" -L \
+                  "https://downloads.sourceforge.net/project/boost/boost-binaries/${BOOST_VERSION}/boost_${major}_${minor}_${patch}-msvc-14.1-64.exe"
+                cmd //c "${{ runner.temp }}/boost_tmp.exe /NORESTART /VERYSILENT /DIR=$BOOST_INSTALL_DIR"
+            fi
+            echo "BOOST_ROOT=$BOOST_INSTALL_DIR" | tee -a $GITHUB_ENV
+            echo "Boost_ROOT=$BOOST_INSTALL_DIR" | tee -a $GITHUB_ENV
+            echo "$BOOST_INSTALL_DIR" >> $GITHUB_PATH
+          fi
       
       - name: Build and install
         shell: bash
