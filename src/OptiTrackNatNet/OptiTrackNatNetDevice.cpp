@@ -200,9 +200,13 @@ void OptiTrackNatNetDevice::processFrame(const FrameData* data)
     if (tracked != this->tracked.getValue())
     {
         if (tracked)
+        {
             msg_info() << "Device is now tracked";
+        }
         else
+        {
             msg_info() << "Device lost";
+        }
         this->tracked.setValue(tracked);
         if (controlNode.getValue())
         {
