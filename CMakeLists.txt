@@ -17,6 +17,7 @@ set(SOURCE_FILES
 
 sofa_find_package(Sofa.Core REQUIRED)
 sofa_find_package(Sofa.Simulation.Common REQUIRED)
+sofa_find_package(Sofa.Component.Controller REQUIRED)
 sofa_find_package(Sofa.GL REQUIRED)
 sofa_find_package(Boost QUIET COMPONENTS system regex date_time REQUIRED)
 
@@ -27,7 +28,7 @@ if(MSVC)
     target_compile_definitions(${PROJECT_NAME} PUBLIC BOOST_ALL_DYN_LINK)
 endif()
 
-target_link_libraries(${PROJECT_NAME} Sofa.Core Sofa.Simulation.Common Sofa.GL)
+target_link_libraries(${PROJECT_NAME} Sofa.Core Sofa.Simulation.Common Sofa.GL Sofa.Component.Controller)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 # Seems to be required by boost::asio
