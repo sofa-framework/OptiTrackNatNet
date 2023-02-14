@@ -32,7 +32,7 @@
 //#include <sofa/core/behavior/BaseController.h>
 #include <sofa/type/Vec.h>
 #include <sofa/type/Quat.h>
-#include <SofaUserInteraction/Controller.h>
+#include <sofa/component/controller/Controller.h>
 
 namespace SofaOptiTrackNatNet
 {
