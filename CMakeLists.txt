@@ -27,7 +27,7 @@ if(MSVC)
     target_compile_definitions(${PROJECT_NAME} PUBLIC BOOST_ALL_DYN_LINK)
 endif()
 
-target_link_libraries(${PROJECT_NAME} SofaCore SofaSimulationCommon SofaUserInteraction Sofa.GL)
+target_link_libraries(${PROJECT_NAME} Sofa.Core Sofa.Simulation.Common Sofa.GL)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 # Seems to be required by boost::asio
